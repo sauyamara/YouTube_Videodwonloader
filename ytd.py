@@ -9,7 +9,7 @@ from rich import box
 from rich.panel import Panel
 
 # Version of the current script
-CURRENT_VERSION = "1.0.2"
+CURRENT_VERSION = "1.0.3"
 UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/refs/heads/main/ytd.py"
 
 # Create a Rich console object
@@ -57,22 +57,33 @@ def check_for_updates():
         response = requests.get(UPDATE_URL)
         if response.status_code == 200:
             remote_script = response.text
-            if f'CURRENT_VERSION = "{CURRENT_VERSION}"' not in remote_script:
-                console.print(f"[bold yellow]New version available![/bold yellow]")
-                update = console.input("[bold blue]Do you want to update to the latest version? (y/n): [/bold blue]")
-                if update.lower() == 'y':
-                    with open(__file__, 'w') as f:
-                        f.write(remote_script)
-                    console.print("[bold green]Script updated successfully! Please restart the application.[/bold green]")
-                    exit()
-                else:
-                    console.print("[bold yellow]Update skipped.[/bold yellow]")
+            remote_version_match = re.search(r'CURRENT_VERSION = "(.*?)"', remote_script)
+            if remote_version_match:
+                remote_version = remote_version_match.group(1)
+                return remote_version  # Return the latest version
             else:
-                console.print("[bold green]You are using the latest version.[/bold green]")
+                console.print("[bold red]Could not determine the latest version.[/bold red]")
+                return CURRENT_VERSION  # Default to current version if unable to parse
         else:
             console.print(f"[bold red]Failed to check for updates. Status code: {response.status_code}[/bold red]")
+            return CURRENT_VERSION  # Default to current version if unable to check
     except Exception as e:
         console.print(f"[bold red]Error checking for updates:[/bold red] {str(e)}")
+        return CURRENT_VERSION  # Default to current version on error
+
+def update_script():
+    try:
+        response = requests.get(UPDATE_URL)
+        if response.status_code == 200:
+            remote_script = response.text
+            with open(__file__, 'w') as f:
+                f.write(remote_script)
+            console.print("[bold green]Script updated successfully! Please restart the application.[/bold green]")
+            exit()
+        else:
+            console.print(f"[bold red]Failed to update the script. Status code: {response.status_code}[/bold red]")
+    except Exception as e:
+        console.print(f"[bold red]Error updating the script:[/bold red] {str(e)}")
 
 def main():
     # Check for updates before starting the program
@@ -88,7 +99,10 @@ def main():
     # Display welcome message with version information
     console.print(Panel(f"YouTube Video Downloader v{current_version_display}\n{version_message}", title="Welcome", title_align="left", border_style="cyan"))
 
-    url = console.input("[bold blue]Enter the YouTube video URL: [/bold blue]")
+    url = console.input("[bold blue]Enter the YouTube video URL or type 'update' to update the script: [/bold blue]")
+
+    if url.lower() == 'update':
+        update_script()
 
     # Get video info and available formats
     info = get_video_info(url)
@@ -152,25 +166,5 @@ def main():
     
     console.print(Panel("[bold blue]Thank you for using the YouTube Video Downloader![/bold blue]", title="Done", border_style="green"))
 
-def check_for_updates():
-    try:
-        response = requests.get(UPDATE_URL)
-        if response.status_code == 200:
-            remote_script = response.text
-            remote_version_match = re.search(r'CURRENT_VERSION = "(.*?)"', remote_script)
-            if remote_version_match:
-                remote_version = remote_version_match.group(1)
-                return remote_version  # Return the latest version
-            else:
-                console.print("[bold red]Could not determine the latest version.[/bold red]")
-                return CURRENT_VERSION  # Default to current version if unable to parse
-        else:
-            console.print(f"[bold red]Failed to check for updates. Status code: {response.status_code}[/bold red]")
-            return CURRENT_VERSION  # Default to current version if unable to check
-    except Exception as e:
-        console.print(f"[bold red]Error checking for updates:[/bold red] {str(e)}")
-        return CURRENT_VERSION  # Default to current version on error
-
 if __name__ == '__main__':
     main()
-    
