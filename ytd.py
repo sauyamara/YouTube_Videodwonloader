@@ -9,7 +9,7 @@ from rich import box
 from rich.panel import Panel
 
 # Version of the current script
-CURRENT_VERSION = "1.0.3"
+CURRENT_VERSION = "1.0.4"
 UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/refs/heads/main/ytd.py"
 
 # Create a Rich console object
