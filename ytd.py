@@ -8,8 +8,8 @@ from rich import box
 from rich.panel import Panel
 
 # Version of the current script
-CURRENT_VERSION = "1.0.1"
-UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/refs/heads/main/ytd.py"
+CURRENT_VERSION = "1.0.2"
+UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/main/ytd.py"
 
 # Create a Rich console object
 console = Console()
@@ -77,7 +77,8 @@ def main():
     # Check for updates before starting the program
     check_for_updates()
 
-    console.print(Panel("YouTube Video Downloader", title="Welcome", title_align="left", border_style="cyan"))
+    # Display welcome panel with version information
+    console.print(Panel(f"YouTube Video Downloader - Version: {CURRENT_VERSION}", title="Welcome", title_align="left", border_style="cyan"))
 
     url = console.input("[bold blue]Enter the YouTube video URL: [/bold blue]")
 
