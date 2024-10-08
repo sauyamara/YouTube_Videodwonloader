@@ -2,6 +2,7 @@ import os
 import shutil
 import yt_dlp
 import requests
+import re
 from rich.console import Console
 from rich.table import Table
 from rich import box
@@ -9,7 +10,7 @@ from rich.panel import Panel
 
 # Version of the current script
 CURRENT_VERSION = "1.0.2"
-UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/main/ytd.py"
+UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/refs/heads/main/ytd.py"
 
 # Create a Rich console object
 console = Console()
@@ -75,10 +76,17 @@ def check_for_updates():
 
 def main():
     # Check for updates before starting the program
-    check_for_updates()
+    latest_version = check_for_updates()  # Update this function to return the latest version
+    current_version_display = CURRENT_VERSION
 
-    # Display welcome panel with version information
-    console.print(Panel(f"YouTube Video Downloader - Version: {CURRENT_VERSION}", title="Welcome", title_align="left", border_style="cyan"))
+    # Determine if the current version is the latest
+    if latest_version == CURRENT_VERSION:
+        version_message = "You are using the latest version."
+    else:
+        version_message = f"A newer version ({latest_version}) is available!"
+
+    # Display welcome message with version information
+    console.print(Panel(f"YouTube Video Downloader v{current_version_display}\n{version_message}", title="Welcome", title_align="left", border_style="cyan"))
 
     url = console.input("[bold blue]Enter the YouTube video URL: [/bold blue]")
 
@@ -144,5 +152,25 @@ def main():
     
     console.print(Panel("[bold blue]Thank you for using the YouTube Video Downloader![/bold blue]", title="Done", border_style="green"))
 
+def check_for_updates():
+    try:
+        response = requests.get(UPDATE_URL)
+        if response.status_code == 200:
+            remote_script = response.text
+            remote_version_match = re.search(r'CURRENT_VERSION = "(.*?)"', remote_script)
+            if remote_version_match:
+                remote_version = remote_version_match.group(1)
+                return remote_version  # Return the latest version
+            else:
+                console.print("[bold red]Could not determine the latest version.[/bold red]")
+                return CURRENT_VERSION  # Default to current version if unable to parse
+        else:
+            console.print(f"[bold red]Failed to check for updates. Status code: {response.status_code}[/bold red]")
+            return CURRENT_VERSION  # Default to current version if unable to check
+    except Exception as e:
+        console.print(f"[bold red]Error checking for updates:[/bold red] {str(e)}")
+        return CURRENT_VERSION  # Default to current version on error
+
 if __name__ == '__main__':
     main()
+    
