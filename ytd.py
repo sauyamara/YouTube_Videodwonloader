@@ -87,7 +87,7 @@ def update_script():
 
 def main():
     # Check for updates before starting the program
-    latest_version = check_for_updates()  # Update this function to return the latest version
+    latest_version = check_for_updates()
     current_version_display = CURRENT_VERSION
 
     # Determine if the current version is the latest
@@ -97,7 +97,14 @@ def main():
         version_message = f"A newer version ({latest_version}) is available!"
 
     # Display welcome message with version information
-    console.print(Panel(f"YouTube Video Downloader v{current_version_display}\n{version_message}", title="Welcome", title_align="left", border_style="cyan"))
+    console.print(Panel(
+        f"[bold cyan]YouTube Video Downloader v{current_version_display}[/bold cyan]\n{version_message}",
+        title="Welcome",
+        title_align="left",
+        border_style="cyan",
+        padding=(1, 2),
+        style="bold"
+    ))
 
     url = console.input("[bold blue]Enter the YouTube video URL or type 'update' to update the script: [/bold blue]")
 
