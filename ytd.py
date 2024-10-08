@@ -3,6 +3,7 @@ import shutil
 import yt_dlp
 import requests
 import re
+import sys
 from rich.console import Console
 from rich.table import Table
 from rich import box
@@ -78,8 +79,10 @@ def update_script():
             remote_script = response.text
             with open(__file__, 'w') as f:
                 f.write(remote_script)
-            console.print("[bold green]Script updated successfully! Please restart the application.[/bold green]")
-            exit()
+            console.print("[bold green]Script updated successfully! Restarting the application...[/bold green]")
+            # Restart the script after updating
+            python = sys.executable
+            os.execl(python, python, *sys.argv)
         else:
             console.print(f"[bold red]Failed to update the script. Status code: {response.status_code}[/bold red]")
     except Exception as e:
