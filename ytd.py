@@ -10,7 +10,7 @@ from rich import box
 from rich.panel import Panel
 
 # Version of the current script
-CURRENT_VERSION = "1.1.2"
+CURRENT_VERSION = "1.1.3"
 UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/refs/heads/main/ytd.py"
 
 # Create a Rich console object
@@ -185,7 +185,16 @@ def get_common_formats(videos):
         console.print("[bold red]No common formats available for selected videos.[/bold red]")
         return []
 
+import os
+import platform
+
+def clear_screen():
+    """Clears the terminal screen based on the operating system."""
+    os.system('cls' if platform.system() == 'Windows' else 'clear')
+
 def main():
+    clear_screen()  # Clear the screen when the application starts
+
     latest_version = check_for_updates()
     current_version_display = CURRENT_VERSION
 
