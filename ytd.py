@@ -10,7 +10,7 @@ from rich import box
 from rich.panel import Panel
 
 # Version of the current script
-CURRENT_VERSION = "1.1.6"
+CURRENT_VERSION = "1.1.7"
 UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/refs/heads/main/ytd.py"
 
 # Create a Rich console object
@@ -205,7 +205,7 @@ def clear_screen():
 
 def main():
      # Clear the screen when the application starts
-
+    clear_screen() 
     latest_version = check_for_updates()
     current_version_display = CURRENT_VERSION
 
@@ -225,7 +225,7 @@ def main():
     # Check for update command
     if url.lower() == 'update':
         update_script()
-        clear_screen() 
+        
         return
 
     # Determine if the URL is a playlist or a video
