@@ -10,7 +10,7 @@ from rich import box
 from rich.panel import Panel
 
 # Version of the current script
-CURRENT_VERSION = "1.1.3"
+CURRENT_VERSION = "1.1.6"
 UPDATE_URL = "https://raw.githubusercontent.com/sauyamara/YouTube_Videodwonloader/refs/heads/main/ytd.py"
 
 # Create a Rich console object
@@ -107,10 +107,21 @@ def get_playlist_info(playlist_url):
 
 def display_videos(playlist_info):
     console.print("Available videos:")
-    for index, entry in enumerate(playlist_info['entries']):
+    table = Table(title="Video List", box=box.ROUNDED)
+    table.add_column("Index", style="cyan", no_wrap=True)
+    table.add_column("Title", style="green")
+    table.add_column("URL", style="blue")
+
+    for index, entry in enumerate(playlist_info['entries'], start=1):
         title = entry['title']
         video_url = entry['url']
-        console.print(f"{index + 1}: [cyan]{title}[/cyan] - [blue]{video_url}[/blue]")
+        table.add_row(
+            str(index),
+            title,
+            video_url
+        )
+
+    console.print(table)
 
 def parse_selection(selection, total_videos):
     selected_indices = set()
@@ -193,7 +204,7 @@ def clear_screen():
     os.system('cls' if platform.system() == 'Windows' else 'clear')
 
 def main():
-    clear_screen()  # Clear the screen when the application starts
+     # Clear the screen when the application starts
 
     latest_version = check_for_updates()
     current_version_display = CURRENT_VERSION
@@ -214,6 +225,7 @@ def main():
     # Check for update command
     if url.lower() == 'update':
         update_script()
+        clear_screen() 
         return
 
     # Determine if the URL is a playlist or a video
@@ -280,4 +292,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-        
